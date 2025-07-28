@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Google Prep Tracker 🧠</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 2rem; background: #f4f4f4; }
+    h1 { text-align: center; }
+    input, textarea { width: 100%; margin-bottom: 10px; padding: 8px; }
+    button { padding: 8px 16px; background: #2e8b57; color: white; border: none; cursor: pointer; }
+    .entry { background: #fff; padding: 10px; margin: 10px 0; border-left: 4px solid #2e8b57; }
+  </style>
+</head>
+<body>
+  <h1>Google Prep Tracker 🔥</h1>
+
+  <label>🗓 What did you do today?</label>
+  <textarea id="note" placeholder="E.g. Solved tricky DP problem..."></textarea>
+
+  <label>🔗 Link to problem:</label>
+  <input type="url" id="link" placeholder="https://...">
+
+  <button onclick="saveEntry()">Add Entry</button>
+
+  <h2>Your Progress</h2>
+  <div id="log"></div>
+
+  <script>
+    const logDiv = document.getElementById("log");
+
+    function saveEntry() {
+      const note = document.getElementById("note").value;
+      const link = document.getElementById("link").value;
+      const date = new Date().toLocaleString();
+      const entry = { note, link, date };
+
+      const logs = JSON.parse(localStorage.getItem("prepLogs") || "[]");
+      logs.unshift(entry); // newest first
+      localStorage.setItem("prepLogs", JSON.stringify(logs));
+
+      document.getElementById("note").value = "";
+      document.getElementById("link").value = "";
+      renderLog();
+    }
+
+    function renderLog() {
+      const logs = JSON.parse(localStorage.getItem("prepLogs") || "[]");
+      logDiv.innerHTML = logs.map(e => `
+        <div class="entry">
+          <strong>${e.date}</strong><br>
+          <a href="${e.link}" target="_blank">${e.link}</a><br>
+          ${e.note}
+        </div>
+      `).join("");
+    }
+
+    renderLog();
+  </script>
+</body>
+</html>
